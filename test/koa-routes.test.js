@@ -42,13 +42,13 @@ describe('koa-routes', function() {
         .use(mount('/', app));
     superApp.keys = ['test'];
 
-    describe('POST /ADSB/submitMesage', function() {
+    describe('POST /message', function() {
 
         it('should pass the correct system and action to seneca', function(done) {
 
             senecaActStub.reset();
             request(superApp.listen())
-                .post('/ADSB/submitMessage')
+                .post('/message')
 	            .send({ name: 'MESSAGE1' })
                 .end(function() {
 
@@ -63,7 +63,7 @@ describe('koa-routes', function() {
 
 	        senecaActStub.reset();
 	        request(superApp.listen())
-		        .post('/ADSB/submitMessage')
+		        .post('/message')
 		        // userid passed in as sub from jwt in state
 		        .send({ name: 'MESSAGE1' })
 		        .end(function() {
@@ -77,7 +77,7 @@ describe('koa-routes', function() {
         it('should return the response from seneca as the body', function(done) {
             senecaActStub.reset();
             request(superApp.listen())
-	            .post('/ADSB/submitMessage')
+	            .post('/message')
 	            .send({ name: 'MESSAGE1' })
 	            .expect(200)
                 .expect('Content-Type', /json/)
@@ -88,13 +88,13 @@ describe('koa-routes', function() {
         })
     });
 
-    describe('GET /ADSB/state', function() {
+    describe('GET /state', function() {
 
         it('should pass the correct system and action to seneca', function(done) {
 
             senecaActStub.reset();
             request(superApp.listen())
-                .get('/ADSB/state')
+                .get('/state')
                 .expect(function() {
                     expect(senecaActStub.args[0][0].system).to.equal('ADSB');
                     expect(senecaActStub.args[0][0].action).to.equal('getState');
@@ -105,7 +105,7 @@ describe('koa-routes', function() {
         it('should return the response from seneca as the body', function(done) {
             senecaActStub.reset();
             request(superApp.listen())
-	            .get('/ADSB/state')
+	            .get('/state')
 	            .expect(200)
                 .expect('Content-Type', /json/)
                 .expect(function(res) {

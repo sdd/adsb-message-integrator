@@ -15,10 +15,10 @@ describe('Seneca integration', function() {
 	var config = {};
 
 	var senecaMock = {
-		addAsync: sinon.stub(),
+		add     : sinon.stub(),
 		actAsync: sinon.stub().returns(Promise.resolve(senecaCreateMockResponse)),
 		reset   : function() {
-			senecaMock.addAsync.reset();
+			senecaMock.add.reset();
 			senecaMock.actAsync.reset();
 		}
 	};
@@ -31,25 +31,25 @@ describe('Seneca integration', function() {
 
 	proxyquire('../seneca-bindings', {})(config, senecaMock, integratorMock);
 
-	var actionSubmit   = senecaMock.addAsync.args[0][1];
-	var actionGetState = senecaMock.addAsync.args[1][1];
-	var actionReset    = senecaMock.addAsync.args[2][1];
+	var actionSubmit   = senecaMock.add.args[0][1];
+	var actionGetState = senecaMock.add.args[1][1];
+	var actionReset    = senecaMock.add.args[2][1];
 
 	describe('seneca message handler', function() {
 
 		it('should register with seneca using the correct matcher', function() {
-			expect(senecaMock.addAsync.args[0][0].system).to.equal('ADSB');
-			expect(senecaMock.addAsync.args[0][0].action).to.equal('submitMessage');
+			expect(senecaMock.add.args[0][0].system).to.equal('ADSB');
+			expect(senecaMock.add.args[0][0].action).to.equal('submitMessage');
 		});
 
 		it('should register with seneca using the correct matcher', function() {
-			expect(senecaMock.addAsync.args[1][0].system).to.equal('ADSB');
-			expect(senecaMock.addAsync.args[1][0].action).to.equal('getState');
+			expect(senecaMock.add.args[1][0].system).to.equal('ADSB');
+			expect(senecaMock.add.args[1][0].action).to.equal('getState');
 		});
 
 		it('should register with seneca using the correct matcher', function() {
-			expect(senecaMock.addAsync.args[2][0].system).to.equal('ADSB');
-			expect(senecaMock.addAsync.args[2][0].action).to.equal('reset');
+			expect(senecaMock.add.args[2][0].system).to.equal('ADSB');
+			expect(senecaMock.add.args[2][0].action).to.equal('reset');
 		});
 	});
 
@@ -57,20 +57,15 @@ describe('Seneca integration', function() {
 
 		it('should return the result of integrator.reset', function(done) {
 
-			integratorMock.reset.reset().returns(Promise.resolve('RESET1'));
+			integratorMock.reset.reset().returns('RESET1');
 
-			var response = actionReset();
+			actionReset(null, function(err, result) {
+				expect(integratorMock.reset).to.have.been.called;
 
-			expect(integratorMock.reset).to.have.been.called;
-
-			response.then(function(result) {
 				expect(result).to.equal('RESET1');
-				done();
-			})
-				.catch(function(err) {
-					expect(err).to.equal(false);
-					done(err);
-				});
+				expect(err).to.equal(null);
+				done(err);
+			});
 		});
 	});
 
@@ -78,20 +73,14 @@ describe('Seneca integration', function() {
 
 		it('should return the result of integrator.getState', function(done) {
 
-			integratorMock.getState.reset().returns(Promise.resolve('STATE'));
+			integratorMock.getState.reset().returns('STATE');
 
-			var response = actionGetState();
-
-			expect(integratorMock.getState).to.have.been.called;
-
-			response.then(function(result) {
+			actionGetState(null, function(err, result) {
+				expect(integratorMock.getState).to.have.been.called;
 				expect(result).to.equal('STATE');
-				done();
-			})
-				.catch(function(err) {
-					expect(err).to.equal(false);
-					done(err);
-				});
+				expect(err).to.equal(null);
+				done(err);
+			});
 		});
 	});
 
@@ -99,21 +88,14 @@ describe('Seneca integration', function() {
 
 		it('should call integrator.submitMessage and return the result', function(done) {
 
-			integratorMock.submitMessage.reset().returns(Promise.resolve('SUBMITRESPONSE'));
+			integratorMock.submitMessage.reset().returns('SUBMITRESPONSE');
 
-			var response = actionSubmit({ message: 'MESSAGE1' });
-
-			//TODO: WTF??
-			//expect(integratorMock.submitMessage).to.have.been.calledWith('MESSSAGE1');
-
-			response.then(function(result) {
+			actionSubmit({ message: 'MESSAGE1' }, function(err, result) {
+				//expect(integratorMock.submitMessage).to.have.been.calledWith('MESSSAGE1');
 				expect(result).to.equal('SUBMITRESPONSE');
-				done();
-			})
-				.catch(function(err) {
-					expect(err).to.equal(false);
-					done(err);
-				});
+				expect(err).to.equal(null);
+				done(err);
+			});
 		});
 	});
 });

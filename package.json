@@ -7,7 +7,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "node --harmony_arrow_functions node_modules/mocha/bin/_mocha --recursive --ui bdd ./test"
   },
   "keywords": [
     "ADSB"
@@ -16,9 +16,13 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^2.9.27",
+    "koa-bodyparser": "^2.0.0",
     "koa-router": "^5.1.1",
     "lodash": "^3.9.3",
-    "thinky": "^2.0.6"
+    "moment": "^2.10.5",
+    "seneca": "https://github.com/sc0ttyd/seneca/archive/master.tar.gz",
+    "seneca-bluebird": "https://github.com/sc0ttyd/seneca-bluebird/archive/master.tar.gz",
+    "string-hash": "^1.1.0"
   },
   "devDependencies": {
     "chai": "^3.0.0",

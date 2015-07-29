@@ -4,8 +4,8 @@ const _      = require('lodash'),
 
 const defaults = {
     adsb: {
-        submit: '/ADSB/submitMessage',
-	    getState: '/ADSB/state'
+        submit: '/message',
+	    getState: '/state'
     }
 };
 
