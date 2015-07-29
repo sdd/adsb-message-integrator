@@ -1,6 +1,6 @@
 {
   "name": "adsb-message-integrator",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Integrates ADSB messages into a continually updating model of the current state of all recently detected ADSB transponders",
   "main": "index.js",
   "directories": {
